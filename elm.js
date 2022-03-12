@@ -5963,6 +5963,17 @@ var $YuyaAizawa$list_wrapper$ListWrapper$Dict$insert = F3(
 		return $YuyaAizawa$list_wrapper$ListWrapper$Dict$Dict(
 			A4($YuyaAizawa$list_wrapper$ListWrapper$Dict$insertHelp, key, value, list, _List_Nil));
 	});
+var $YuyaAizawa$list_wrapper$ListWrapper$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		function (_v0) {
+			var k = _v0.a;
+			var v = _v0.b;
+			return A2($YuyaAizawa$list_wrapper$ListWrapper$Dict$insert, k, v);
+		},
+		$YuyaAizawa$list_wrapper$ListWrapper$Dict$empty,
+		assocs);
+};
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $YuyaAizawa$list_wrapper$ListWrapper$Dict$removeHelp = F3(
 	function (key, rest, result) {
@@ -6020,30 +6031,38 @@ var $author$project$Main$moveDown = function (dict) {
 					return d;
 				} else {
 					if (_v1.b.$ === 'Nothing') {
-						var n = _v1.a.a;
-						var _v3 = _v1.b;
+						var _v3 = _v1.a.a;
+						var n = _v3.a;
+						var b = _v3.b;
+						var _v4 = _v1.b;
 						return A2(
 							helper,
 							_Utils_Tuple2(x, y + 1),
 							A3(
 								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
 								_Utils_Tuple2(x, y + 1),
-								n,
+								_Utils_Tuple2(n, b),
 								A2(
 									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
 									_Utils_Tuple2(x, y),
 									d)));
 					} else {
-						var n = _v1.a.a;
-						var m = _v1.b.a;
-						return (!_Utils_eq(n, m)) ? d : A3(
-							$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
-							_Utils_Tuple2(x, y + 1),
-							n + 1,
-							A2(
-								$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
-								_Utils_Tuple2(x, y),
-								d));
+						if (_v1.a.a.b && _v1.b.a.b) {
+							var _v5 = _v1.a.a;
+							var n = _v5.a;
+							var _v6 = _v1.b.a;
+							var m = _v6.a;
+							return (!_Utils_eq(n, m)) ? d : A3(
+								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
+								_Utils_Tuple2(x, y + 1),
+								_Utils_Tuple2(n + 1, false),
+								A2(
+									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
+									_Utils_Tuple2(x, y),
+									d));
+						} else {
+							return d;
+						}
 					}
 				}
 			}
@@ -6093,30 +6112,38 @@ var $author$project$Main$moveLeft = function (dict) {
 					return d;
 				} else {
 					if (_v1.b.$ === 'Nothing') {
-						var n = _v1.a.a;
-						var _v3 = _v1.b;
+						var _v3 = _v1.a.a;
+						var n = _v3.a;
+						var b = _v3.b;
+						var _v4 = _v1.b;
 						return A2(
 							helper,
 							_Utils_Tuple2(x - 1, y),
 							A3(
 								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
 								_Utils_Tuple2(x - 1, y),
-								n,
+								_Utils_Tuple2(n, b),
 								A2(
 									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
 									_Utils_Tuple2(x, y),
 									d)));
 					} else {
-						var n = _v1.a.a;
-						var m = _v1.b.a;
-						return (!_Utils_eq(n, m)) ? d : A3(
-							$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
-							_Utils_Tuple2(x - 1, y),
-							n + 1,
-							A2(
-								$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
-								_Utils_Tuple2(x, y),
-								d));
+						if (_v1.a.a.b && _v1.b.a.b) {
+							var _v5 = _v1.a.a;
+							var n = _v5.a;
+							var _v6 = _v1.b.a;
+							var m = _v6.a;
+							return (!_Utils_eq(n, m)) ? d : A3(
+								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
+								_Utils_Tuple2(x - 1, y),
+								_Utils_Tuple2(n + 1, false),
+								A2(
+									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
+									_Utils_Tuple2(x, y),
+									d));
+						} else {
+							return d;
+						}
 					}
 				}
 			}
@@ -6165,30 +6192,38 @@ var $author$project$Main$moveRight = function (dict) {
 					return d;
 				} else {
 					if (_v1.b.$ === 'Nothing') {
-						var n = _v1.a.a;
-						var _v3 = _v1.b;
+						var _v3 = _v1.a.a;
+						var n = _v3.a;
+						var b = _v3.b;
+						var _v4 = _v1.b;
 						return A2(
 							helper,
 							_Utils_Tuple2(x + 1, y),
 							A3(
 								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
 								_Utils_Tuple2(x + 1, y),
-								n,
+								_Utils_Tuple2(n, b),
 								A2(
 									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
 									_Utils_Tuple2(x, y),
 									d)));
 					} else {
-						var n = _v1.a.a;
-						var m = _v1.b.a;
-						return (!_Utils_eq(n, m)) ? d : A3(
-							$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
-							_Utils_Tuple2(x + 1, y),
-							n + 1,
-							A2(
-								$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
-								_Utils_Tuple2(x, y),
-								d));
+						if (_v1.a.a.b && _v1.b.a.b) {
+							var _v5 = _v1.a.a;
+							var n = _v5.a;
+							var _v6 = _v1.b.a;
+							var m = _v6.a;
+							return (!_Utils_eq(n, m)) ? d : A3(
+								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
+								_Utils_Tuple2(x + 1, y),
+								_Utils_Tuple2(n + 1, false),
+								A2(
+									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
+									_Utils_Tuple2(x, y),
+									d));
+						} else {
+							return d;
+						}
 					}
 				}
 			}
@@ -6238,30 +6273,38 @@ var $author$project$Main$moveUp = function (dict) {
 					return d;
 				} else {
 					if (_v1.b.$ === 'Nothing') {
-						var n = _v1.a.a;
-						var _v3 = _v1.b;
+						var _v3 = _v1.a.a;
+						var n = _v3.a;
+						var b = _v3.b;
+						var _v4 = _v1.b;
 						return A2(
 							helper,
 							_Utils_Tuple2(x, y - 1),
 							A3(
 								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
 								_Utils_Tuple2(x, y - 1),
-								n,
+								_Utils_Tuple2(n, b),
 								A2(
 									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
 									_Utils_Tuple2(x, y),
 									d)));
 					} else {
-						var n = _v1.a.a;
-						var m = _v1.b.a;
-						return (!_Utils_eq(n, m)) ? d : A3(
-							$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
-							_Utils_Tuple2(x, y - 1),
-							n + 1,
-							A2(
-								$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
-								_Utils_Tuple2(x, y),
-								d));
+						if (_v1.a.a.b && _v1.b.a.b) {
+							var _v5 = _v1.a.a;
+							var n = _v5.a;
+							var _v6 = _v1.b.a;
+							var m = _v6.a;
+							return (!_Utils_eq(n, m)) ? d : A3(
+								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
+								_Utils_Tuple2(x, y - 1),
+								_Utils_Tuple2(n + 1, false),
+								A2(
+									$YuyaAizawa$list_wrapper$ListWrapper$Dict$remove,
+									_Utils_Tuple2(x, y),
+									d));
+						} else {
+							return d;
+						}
 					}
 				}
 			}
@@ -6288,18 +6331,38 @@ var $author$project$Main$moveUp = function (dict) {
 		dict,
 		A2($elm$core$List$range, 0, 3));
 };
+var $YuyaAizawa$list_wrapper$ListWrapper$Dict$toList = function (_v0) {
+	var list = _v0.a;
+	return list;
+};
 var $author$project$Main$move = F2(
 	function (direction, dict) {
-		switch (direction.$) {
-			case 'Down':
-				return $author$project$Main$moveDown(dict);
-			case 'Up':
-				return $author$project$Main$moveUp(dict);
-			case 'Right':
-				return $author$project$Main$moveRight(dict);
-			default:
-				return $author$project$Main$moveLeft(dict);
-		}
+		var newField = function () {
+			switch (direction.$) {
+				case 'Down':
+					return $author$project$Main$moveDown(dict);
+				case 'Up':
+					return $author$project$Main$moveUp(dict);
+				case 'Right':
+					return $author$project$Main$moveRight(dict);
+				default:
+					return $author$project$Main$moveLeft(dict);
+			}
+		}();
+		return $YuyaAizawa$list_wrapper$ListWrapper$Dict$fromList(
+			A2(
+				$elm$core$List$map,
+				function (_v0) {
+					var _v1 = _v0.a;
+					var x = _v1.a;
+					var y = _v1.b;
+					var _v2 = _v0.b;
+					var n = _v2.a;
+					return _Utils_Tuple2(
+						_Utils_Tuple2(x, y),
+						_Utils_Tuple2(n, true));
+				},
+				$YuyaAizawa$list_wrapper$ListWrapper$Dict$toList(newField)));
 	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -6327,10 +6390,6 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $YuyaAizawa$list_wrapper$ListWrapper$Dict$toList = function (_v0) {
-	var list = _v0.a;
-	return list;
-};
 var $elm$core$List$unzip = function (pairs) {
 	var step = F2(
 		function (_v0, _v1) {
@@ -6493,7 +6552,21 @@ var $author$project$Main$rollNext = function (set) {
 };
 var $author$project$Main$updateField = F2(
 	function (model, newDict) {
-		return _Utils_eq(model.field, newDict) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+		var oldField = $YuyaAizawa$list_wrapper$ListWrapper$Dict$fromList(
+			A2(
+				$elm$core$List$map,
+				function (_v0) {
+					var _v1 = _v0.a;
+					var x = _v1.a;
+					var y = _v1.b;
+					var _v2 = _v0.b;
+					var n = _v2.a;
+					return _Utils_Tuple2(
+						_Utils_Tuple2(x, y),
+						_Utils_Tuple2(n, true));
+				},
+				$YuyaAizawa$list_wrapper$ListWrapper$Dict$toList(model.field)));
+		return _Utils_eq(oldField, newDict) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 			_Utils_update(
 				model,
 				{field: newDict}),
@@ -6551,7 +6624,7 @@ var $author$project$Main$update = F2(
 							field: A3(
 								$YuyaAizawa$list_wrapper$ListWrapper$Dict$insert,
 								_Utils_Tuple2(x, y),
-								n,
+								_Utils_Tuple2(n, true),
 								model.field)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -6667,7 +6740,8 @@ var $author$project$Main$view = function (model) {
 					_Utils_Tuple2(x, y),
 					model.field);
 				if (_v1.$ === 'Just') {
-					var n = _v1.a;
+					var _v2 = _v1.a;
+					var n = _v2.a;
 					return _List_fromArray(
 						[
 							A2(
@@ -6702,7 +6776,7 @@ var $author$project$Main$view = function (model) {
 										A2(
 											$elm$core$String$pad,
 											4,
-											_Utils_chr('　')),
+											_Utils_chr(' ')),
 										$author$project$Main$i2s)(
 										A2($elm$core$Basics$pow, 2, n + 1)))
 								]))

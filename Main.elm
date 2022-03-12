@@ -16,7 +16,7 @@ type alias Model =
   , isOver : Bool
   }
 
-type alias Field = Dict (Int, Int) Int
+type alias Field = Dict (Int, Int) (Int, Bool)
 
 
 type Msg
@@ -42,7 +42,7 @@ type Direction
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Pressed str -> 
+    Pressed str ->
       case str of
         "ArrowLeft" ->
           move Left model.field
@@ -66,17 +66,24 @@ update msg model =
           , Cmd.none
           )
         _ ->
-          ( { model | field = Dict.insert (x,y) n model.field }
+          ( { model | field = Dict.insert (x,y) (n,True) model.field }
           , Cmd.none
           )
 
 move : Direction -> Field -> Field
 move direction dict =
-  case direction of
-    Down -> moveDown dict
-    Up -> moveUp dict
-    Right -> moveRight dict
-    Left -> moveLeft dict
+  let
+    newField =
+      case direction of
+        Down -> moveDown dict
+        Up -> moveUp dict
+        Right -> moveRight dict
+        Left -> moveLeft dict
+  in
+    newField
+      |> Dict.toList
+      |> List.map (\((x,y),(n,_)) -> ((x,y),(n,True)))
+      |> Dict.fromList
 
 
 
@@ -89,17 +96,19 @@ moveUp dict =
       else
         case (Dict.get (x,y) d, Dict.get (x,y-1) d) of
           (Nothing, _) -> d
-          (Just n, Nothing) ->
+          (Just (n,b), Nothing) ->
             Dict.remove (x,y) d
-              |> Dict.insert (x,y-1) n
+              |> Dict.insert (x,y-1) (n,b)
               |> helper (x,y-1)
 
-          (Just n, Just m) ->
+          (Just (n,True), Just (m,True)) ->
             if n /= m
             then d
             else
               Dict.remove (x,y) d
-                |> Dict.insert (x,y-1) (n+1)
+                |> Dict.insert (x,y-1) ((n+1),False)
+
+          _ -> d
 
     move1row row dict_ =
       List.range 1 3
@@ -125,17 +134,19 @@ moveDown dict =
       else
         case (Dict.get (x,y) d, Dict.get (x,y+1) d) of
           (Nothing, _) -> d
-          (Just n, Nothing) ->
+          (Just (n,b), Nothing) ->
             Dict.remove (x,y) d
-              |> Dict.insert (x,y+1) n
+              |> Dict.insert (x,y+1) (n,b)
               |> helper (x,y+1)
 
-          (Just n, Just m) ->
+          (Just (n,True), Just (m,True)) ->
             if n /= m
             then d
             else
               Dict.remove (x,y) d
-                |> Dict.insert (x,y+1) (n+1)
+                |> Dict.insert (x,y+1) ((n+1),False)
+
+          _ -> d
 
     move1row row dict_ =
       List.range 0 2
@@ -162,17 +173,19 @@ moveLeft dict =
       else
         case (Dict.get (x,y) d, Dict.get (x-1,y) d) of
           (Nothing, _) -> d
-          (Just n, Nothing) ->
+          (Just (n,b), Nothing) ->
             Dict.remove (x,y) d
-              |> Dict.insert (x-1,y) n
+              |> Dict.insert (x-1,y) (n,b)
               |> helper (x-1,y)
 
-          (Just n, Just m) ->
+          (Just (n,True), Just (m,True)) ->
             if n /= m
             then d
             else
               Dict.remove (x,y) d
-                |> Dict.insert (x-1,y) (n+1)
+                |> Dict.insert (x-1,y) ((n+1),False)
+
+          _ -> d
 
     move1col col dict_ =
       List.range 1 3
@@ -198,17 +211,19 @@ moveRight dict =
       else
         case (Dict.get (x,y) d, Dict.get (x+1,y) d) of
           (Nothing, _) -> d
-          (Just n, Nothing) ->
+          (Just (n,b), Nothing) ->
             Dict.remove (x,y) d
-              |> Dict.insert (x+1,y) n
+              |> Dict.insert (x+1,y) (n,b)
               |> helper (x+1,y)
 
-          (Just n, Just m) ->
+          (Just (n,True), Just (m,True)) ->
             if n /= m
             then d
             else
               Dict.remove (x,y) d
-                |> Dict.insert (x+1,y) (n+1)
+                |> Dict.insert (x+1,y) ((n+1),False)
+
+          _ -> d
 
     move1col col dict_ =
       List.range 0 2
@@ -227,14 +242,21 @@ moveRight dict =
       (List.range 0 3)
 
 updateField model newDict =
-  if model.field == newDict
-  then
-    (model, Cmd.none)
-  else
-    ( { model | field = newDict }
-    , rollNext (findSpace newDict)
-        |> generate GetNext
-    )
+  let
+    oldField =
+      model.field
+        |> Dict.toList
+        |> List.map (\((x,y),(n,_)) -> ((x,y),(n,True)))
+        |> Dict.fromList
+  in
+    if oldField == newDict
+    then
+      (model, Cmd.none)
+    else
+      ( { model | field = newDict }
+      , rollNext (findSpace newDict)
+          |> generate GetNext
+      )
 
 findSpace dict =
   let
@@ -291,7 +313,7 @@ view model =
     |> List.concatMap
         (\(x,y) ->
           case Dict.get (x,y) model.field of
-            Just n ->
+            Just (n,_) ->
               [ Svg.rect
                 [ SAttr.x <| i2s (x*50)
                 , SAttr.y <| i2s (y*50)
@@ -305,7 +327,7 @@ view model =
                   , SAttr.y <| i2s (y*50+30)
                   ]
                   [ Svg.text
-                      ( (String.pad 4 '　' << i2s) (2^(n+1)))
+                      ( (String.pad 4 ' ' << i2s) (2^(n+1)))
                   ]
               ]
             _ ->
@@ -318,7 +340,7 @@ view model =
                 , SAttr.fillOpacity "20"
                 ][]
               ]
-              
+
         )
     |> svg
         [ SAttr.width "200"
